@@ -58,4 +58,5 @@ popd
 
 # load the cert and key as secrets
 kubectl --kubeconfig /etc/kubernetes/admin.conf create secret tls cluster-apiserver-certs --cert=cluster-api-ca/cluster-api.pem --key=cluster-api-ca/cluster-api-key.pem
-kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /vagrant/manifests/clusterapi.yaml
+kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /vagrant/manifests/apiserver.yaml
+kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f /vagrant/manifests/controller-manager.yaml

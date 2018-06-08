@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clusterapi-controllers
+  namespace: default
+  labels:
+    api: clusterapi
+    controllermanager: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      api: clusterapi
+      controllermanager: "true"
+  template:
+    metadata:
+      labels:
+        api: clusterapi
+        controllermanager: "true"
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoExecute
+        key: node.alpha.kubernetes.io/notReady
+        operator: Exists
+      - effect: NoExecute
+        key: node.alpha.kubernetes.io/unreachable
+        operator: Exists
+      containers:
+      - name: controller-manager
+        image: gcr.io/k8s-cluster-api/controller-manager:0.0.6
+        volumeMounts:
+          - name: config
+            mountPath: /etc/kubernetes
+          - name: certs
+            mountPath: /etc/ssl/certs
+        command:
+        - "./controller-manager"
+        args:
+        - --kubeconfig=/etc/kubernetes/admin.conf
+        resources:
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 100m
+            memory: 30Mi
+      volumes:
+      - name: config
+        hostPath:
+          path: /etc/kubernetes
+      - name: certs
+        hostPath:
+          path: /etc/ssl/certs

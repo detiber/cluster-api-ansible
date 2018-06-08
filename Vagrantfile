@@ -8,5 +8,5 @@ Vagrant.configure("2") do |config|
      libvirt.memory = 4096
   end
 
-  config.vm.provision "shell", path: "scripts/apiserver.sh", privileged: true
+  config.vm.provision "shell", path: "scripts/bootstrap-cluster-api.sh", privileged: true
 end
