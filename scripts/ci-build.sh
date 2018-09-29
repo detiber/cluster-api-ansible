@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright 2018 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-.PHONY: image
+set -o errexit
+set -o nounset
+set -o pipefail
 
-NAME = ansible-machine-controller
-TAG = 0.0.1
+REPO_ROOT=$(dirname "${BASH_SOURCE}")/..
 
-image:
-	docker build -t "$(NAME):$(TAG)" -f ./Dockerfile ../..
+cd $REPO_ROOT && make manager clusterctl

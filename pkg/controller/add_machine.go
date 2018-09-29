@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Kubernetes Authors.
+Copyright 2018 The Kubernetes authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,26 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package options
+package controller
 
 import (
-	"github.com/spf13/pflag"
-	"sigs.k8s.io/cluster-api/pkg/controller/config"
+	"sigs.k8s.io/cluster-api/pkg/controller/machine"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
+
+	"github.com/detiber/cluster-api-provider-ansible/pkg/cloud/ansible"
 )
 
-type MachineControllerServer struct {
-	CommonConfig *config.Configuration
-}
-
-func NewMachineControllerServer() *MachineControllerServer {
-	s := MachineControllerServer{
-		CommonConfig: &config.ControllerConfig,
-	}
-	return &s
-}
-
-func (s *MachineControllerServer) AddFlags(fs *pflag.FlagSet) {
-	// TODO: Add custom flags
-
-	config.ControllerConfig.AddFlags(pflag.CommandLine)
+func init() {
+	// AddToManagerFuncs is a list of functions to create controllers and add them to a manager.
+	AddToManagerFuncs = append(AddToManagerFuncs, func(m manager.Manager) error {
+		return machine.AddWithActuator(m, ansible.MachineActuator)
+	})
 }

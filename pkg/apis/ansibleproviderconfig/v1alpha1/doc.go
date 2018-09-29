@@ -14,26 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
-
-import (
-	"github.com/detiber/cluster-api-ansible/cmd/ansible-machine-controller/app"
-	"github.com/detiber/cluster-api-ansible/cmd/ansible-machine-controller/app/options"
-	"github.com/golang/glog"
-	"github.com/spf13/pflag"
-	"k8s.io/apiserver/pkg/util/logs"
-)
-
-func main() {
-	s := options.NewMachineControllerServer()
-	s.AddFlags(pflag.CommandLine)
-
-	pflag.Parse()
-
-	logs.InitLogs()
-	defer logs.FlushLogs()
-
-	if err := app.Run(s); err != nil {
-		glog.Errorf("Failed to start machine controller. Err: %v", err)
-	}
-}
+// Package v1alpha1 contains API Schema definitions for the ansibleproviderconfig v1alpha1 API group
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen=package,register
+// +k8s:conversion-gen=github.com/detiber/cluster-api-provider-ansible/pkg/apis/ansibleproviderconfig
+// +k8s:defaulter-gen=TypeMeta
+// +groupName=ansibleproviderconfig.k8s.io
+package v1alpha1
